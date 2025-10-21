@@ -53,6 +53,11 @@ import com.example.inventory.data.Item
 import com.example.inventory.ui.item.formatedPrice
 import com.example.inventory.ui.navigation.NavigationDestination
 import com.example.inventory.ui.theme.InventoryTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.inventory.ui.AppViewModelProvider
+
 
 object HomeDestination : NavigationDestination {
     override val route = "home"
@@ -67,69 +72,34 @@ object HomeDestination : NavigationDestination {
 fun HomeScreen(
     navigateToItemEntry: () -> Unit,
     navigateToItemUpdate: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-
-    Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            InventoryTopAppBar(
-                title = stringResource(HomeDestination.titleRes),
-                canNavigateBack = false,
-                scrollBehavior = scrollBehavior
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = navigateToItemEntry,
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.item_entry_title)
-                )
-            }
-        },
-    ) { innerPadding ->
-        HomeBody(
-            itemList = listOf(),
-            onItemClick = navigateToItemUpdate,
-            modifier = modifier.fillMaxSize(),
-            contentPadding = innerPadding,
-        )
-    }
+    val homeUiState by viewModel.homeUiState.collectAsState()
+    // ... Scaffold, TopBar, FAB etc (mantén lo que el starter ya tiene)
+    HomeBody(
+        itemList = homeUiState.itemList,
+        onItemClick = navigateToItemUpdate,
+        modifier = modifier.fillMaxSize()
+    )
 }
 
 @Composable
-private fun HomeBody(
+fun HomeBody(
     itemList: List<Item>,
     onItemClick: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    modifier: Modifier = Modifier
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier,
-    ) {
-        if (itemList.isEmpty()) {
-            Text(
-                text = stringResource(R.string.no_item_description),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(contentPadding),
-            )
-        } else {
-            InventoryList(
-                itemList = itemList,
-                onItemClick = { onItemClick(it.id) },
-                contentPadding = contentPadding,
-                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
+    LazyColumn(modifier = modifier) {
+        items(itemList) { item ->
+            InventoryListItem(
+                item = item,
+                onItemClick = { onItemClick(item.id) }
             )
         }
     }
 }
+
 
 @Composable
 private fun InventoryList(
