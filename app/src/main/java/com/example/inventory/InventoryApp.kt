@@ -15,7 +15,6 @@
  */
 
 package com.example.inventory
-
 import androidx.compose.material.icons.Icons.Filled
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar

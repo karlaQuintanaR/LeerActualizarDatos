@@ -16,7 +16,6 @@ object AppViewModelProvider {
         }
     }
 }
-
 fun androidx.lifecycle.viewmodel.CreationExtras.inventoryApplication(): InventoryApplication {
     return (this[androidx.lifecycle.viewmodel.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as InventoryApplication)
 }

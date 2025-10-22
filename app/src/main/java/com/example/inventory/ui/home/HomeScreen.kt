@@ -99,8 +99,6 @@ fun HomeBody(
         }
     }
 }
-
-
 @Composable
 private fun InventoryList(
     itemList: List<Item>,

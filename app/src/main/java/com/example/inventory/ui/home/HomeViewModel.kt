@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 private const val TIMEOUT_MILLIS = 5_000L
-
 data class HomeUiState(val itemList: List<Item> = listOf())
 
 class HomeViewModel(itemsRepository: ItemsRepository) : ViewModel() {
